@@ -31,16 +31,17 @@ const Navbar = () => {
 
     // Check if current path should hide navbar
     const shouldHideNavbar = () => {
-        // Exact path matches
+        // Hide for login, signup, etc.
         if (pages.some(page => location.pathname === page)) {
             return true;
         }
-        
-        // Hide for all exam routes (using regex)
-        if (location.pathname.startsWith('/exam/')) {
+
+        // Hide only for `/exam/:courseId`
+        const examPathPattern = /^\/exam\/[^/]+$/; // matches /exam/anything
+        if (examPathPattern.test(location.pathname)) {
             return true;
         }
-        
+
         return false;
     };
 
