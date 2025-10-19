@@ -42,17 +42,13 @@ const Login = () => {
         if (hasAttemptedAutoLogin.current) return;
 
         const userData = getQueryParams();
-        const tokenFromUrl = new URLSearchParams(location.search).get("token");
-
-        if (userData && tokenFromUrl) {
-            const normalizedUser = {
-                ...userData,
-                token: tokenFromUrl, // explicitly set token
-            };
-            if (validateEmail(normalizedUser.email)) {
-                hasAttemptedAutoLogin.current = true;
-                auth.login(normalizedUser); // this will now store token correctly
-                navigate("/courses", { replace: true });
+        if (userData && userData.id && userData.email && userData.token) {
+            if (validateEmail(userData.email)) {
+                hasAttemptedAutoLogin.current = true; // Mark as attempted
+                auth.login(userData);
+                navigate('/courses', { replace: true });
+            } else {
+                setErrors({ general: 'Invalid user data provided in URL' });
             }
         }
     }, [location.search]); // Depend only on location.search to avoid re-running on auth or navigate changes
